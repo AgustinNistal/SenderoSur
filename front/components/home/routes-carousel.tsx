@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, MapPin, Clock, Plane } from "lucide-react"
 import { routes } from "@/lib/data"
+import { useLanguage } from "@/contexts/language-context"
 
 const routeImages: Record<string, string> = {
   "costera-atlantica": "/puerto-piramides-whales-peninsula-valdes-argentina.jpg",
@@ -16,15 +17,18 @@ const routeImages: Record<string, string> = {
 }
 
 export function RoutesCarousel() {
+  const { translateRoute } = useLanguage()
   const [activeIndex, setActiveIndex] = useState(0)
   const carouselRef = useRef<HTMLDivElement>(null)
 
+  const translatedRoutes = routes.map(translateRoute)
+
   const scrollToIndex = (index: number) => {
-    const newIndex = Math.max(0, Math.min(index, routes.length - 1))
+    const newIndex = Math.max(0, Math.min(index, translatedRoutes.length - 1))
     setActiveIndex(newIndex)
 
     if (carouselRef.current) {
-      const cardWidth = carouselRef.current.scrollWidth / routes.length
+      const cardWidth = carouselRef.current.scrollWidth / translatedRoutes.length
       carouselRef.current.scrollTo({
         left: cardWidth * newIndex,
         behavior: "smooth",
@@ -65,7 +69,7 @@ export function RoutesCarousel() {
           className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {routes.map((route, index) => (
+          {translatedRoutes.map((route, index) => (
             <div key={route.id} className="flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[30vw] snap-start">
               <div className="group relative bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-[480px]">
                 <div className="absolute inset-0">
@@ -117,7 +121,7 @@ export function RoutesCarousel() {
         </div>
 
         <div className="flex justify-center gap-2 mt-6 md:hidden">
-          {routes.map((_, index) => (
+          {translatedRoutes.map((_, index) => (
             <button
               key={index}
               onClick={() => scrollToIndex(index)}

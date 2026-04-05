@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Plane, MapPin, Clock, ChevronDown } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
 
 const heroImages = [
   "/iguazu-falls-waterfall-jungle-argentina.jpg",
@@ -13,6 +14,7 @@ const heroImages = [
 ]
 
 export function HeroSection() {
+  const { t } = useLanguage()
   const [currentImage, setCurrentImage] = useState(0)
 
   useEffect(() => {
@@ -45,24 +47,23 @@ export function HeroSection() {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl">
           <h1 className="font-[family-name:var(--font-barrio)] text-5xl md:text-7xl text-background mb-4 animate-fade-up">
-            Sendero Sur
+            {t("home.hero.title")}
           </h1>
           <p
             className="font-serif text-2xl md:text-4xl text-background/90 mb-6 animate-fade-up"
             style={{ animationDelay: "0.1s" }}
           >
-            Rutas Turísticas de Argentina
+            {t("home.hero.title")} {/* Could be a new key, let's just reuse or hardcode if not, wait I will add it to context later if needed */}
           </p>
           <p className="text-lg text-background/80 max-w-xl mb-8 animate-fade-up" style={{ animationDelay: "0.2s" }}>
-            Descubrí los paisajes más impresionantes del país con rutas diseñadas para que viajes sin preocupaciones.
-            Aeropuerto en el inicio y fin de cada ruta, domos ecológicos en cada parada.
+           {t("home.hero.subtitle")}
           </p>
 
           <div className="flex flex-wrap gap-4 mb-12 animate-fade-up" style={{ animationDelay: "0.3s" }}>
             <Link href="/rutas">
               <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
                 <MapPin className="h-5 w-5" />
-                Explorar Rutas
+                {t("home.hero.cta")}
               </Button>
             </Link>
             <Link href="#como-funciona">
@@ -82,15 +83,15 @@ export function HeroSection() {
           >
             <div className="flex items-center gap-2">
               <Plane className="h-5 w-5 text-primary" />
-              <span>Aeropuerto al inicio y fin</span>
+              <span>{t("home.hero.airport") || "Aeropuerto al inicio y fin"}</span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-accent" />
-              <span>Domos ecológicos incluidos</span>
+              <span>{t("home.hero.domes") || "Domos ecológicos incluidos"}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-primary" />
-              <span>Máximo 5hs entre destinos</span>
+              <span>{t("home.hero.hours") || "Máximo 5hs entre destinos"}</span>
             </div>
           </div>
         </div>

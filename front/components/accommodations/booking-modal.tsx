@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -9,8 +9,11 @@ import { Calendar } from "@/components/ui/calendar"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
 import { CalendarDays, Users, Loader2, Check } from "lucide-react"
+import { apiRequest } from "@/hooks/api-helper"
 import type { Accommodation } from "@/lib/data"
 import type { DateRange } from "react-day-picker"
+import { useLanguage } from "@/contexts/language-context"
+import { format, startOfDay } from "date-fns"
 
 interface BookingModalProps {
   open: boolean
@@ -19,12 +22,53 @@ interface BookingModalProps {
 }
 
 export function BookingModal({ open, onOpenChange, accommodation }: BookingModalProps) {
+  const { t } = useLanguage()
   const [dateRange, setDateRange] = useState<DateRange | undefined>()
   const [guests, setGuests] = useState("2")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [unavailableDates, setUnavailableDates] = useState<Date[]>([])
   const { user, addReservation } = useAuth()
+
+  useEffect(() => {
+    async function fetchAvailability() {
+      if (!open) return
+      try {
+        // Fetch approx 6 months of availability
+        const from = format(new Date(), "yyyy-MM-dd")
+        const toDate = new Date()
+        toDate.setMonth(toDate.getMonth() + 6)
+        const to = format(toDate, "yyyy-MM-dd")
+
+        const availability = await apiRequest(
+          `/accommodations/${accommodation.id}/availability?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`
+        )
+
+        if (availability.conflicts && availability.conflicts.length > 0) {
+          const dates: Date[] = []
+          for (const conflict of availability.conflicts) {
+            // Include dates from checkIn out to the day BEFORE checkOut (since checkOut day is technically free to checkIn)
+            const start = new Date(conflict.checkIn + "T00:00:00") // Force local timezone interpretation without shift
+            const end = new Date(conflict.checkOut + "T00:00:00")
+            let current = start
+            while (current < end) {
+              dates.push(new Date(current))
+              current.setDate(current.getDate() + 1)
+            }
+          }
+          setUnavailableDates(dates)
+        } else {
+          setUnavailableDates([])
+        }
+      } catch (e) {
+        console.error("Failed to load availability", e)
+      }
+    }
+
+    fetchAvailability()
+  }, [open, accommodation.id])
 
   const nights = useMemo(() => {
     if (!dateRange?.from || !dateRange?.to) return 0
@@ -43,18 +87,37 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
     if (!dateRange?.from || !dateRange?.to) return
 
     setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    setError(null)
 
-    addReservation({
-      accommodationId: accommodation.id,
-      accommodationName: accommodation.name,
-      cityName: accommodation.city,
-      checkIn: dateRange.from,
-      checkOut: dateRange.to,
-      guests: Number.parseInt(guests),
-      totalPrice,
-      status: "confirmed",
-    })
+    try {
+      const fromISO = format(dateRange.from, "yyyy-MM-dd")
+      const toISO = format(dateRange.to, "yyyy-MM-dd")
+
+      const availability = await apiRequest(
+        `/accommodations/${accommodation.id}/availability?from=${encodeURIComponent(fromISO)}&to=${encodeURIComponent(toISO)}`,
+      )
+
+      if (!availability.available) {
+        setError(t("booking.error.unavailable") || "Ese hospedaje no está disponible en las fechas seleccionadas.")
+        setLoading(false)
+        return
+      }
+
+      await addReservation({
+        accommodationId: accommodation.id,
+        accommodationName: accommodation.name,
+        cityName: accommodation.city,
+        checkIn: dateRange.from,
+        checkOut: dateRange.to,
+        guests: Number.parseInt(guests),
+        totalPrice,
+        status: "confirmed",
+      })
+    } catch {
+      setError(t("booking.error.generic") || "No pudimos procesar la reserva. Probá de nuevo en unos segundos.")
+      setLoading(false)
+      return
+    }
 
     setLoading(false)
     setSuccess(true)
@@ -66,14 +129,17 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
     }, 2000)
   }
 
-  const disabledDays = { before: new Date() }
+  const disabledDays = [
+    { before: startOfDay(new Date()) },
+    ...unavailableDates
+  ]
 
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-serif text-2xl">Reservar {accommodation.name}</DialogTitle>
+            <DialogTitle className="font-serif text-2xl">{t("booking.title") || "Reservar"} {accommodation.name}</DialogTitle>
           </DialogHeader>
 
           {success ? (
@@ -81,17 +147,22 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Check className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="font-serif text-xl text-foreground mb-2">Reserva Confirmada</h3>
+              <h3 className="font-serif text-xl text-foreground mb-2">{t("booking.success.title") || "Reserva Confirmada"}</h3>
               <p className="text-muted-foreground">
-                Tu reserva ha sido procesada exitosamente. Podés verla en tu perfil.
+                {t("booking.success.desc") || "Tu reserva ha sido procesada exitosamente. Podés verla en tu perfil."}
               </p>
             </div>
           ) : (
             <div className="space-y-6 mt-4">
+              {error && (
+                <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                  {error}
+                </div>
+              )}
               <div>
                 <Label className="flex items-center gap-2 mb-3">
                   <CalendarDays className="h-4 w-4" />
-                  Fechas de estadía
+                  {t("booking.dates") || "Fechas de estadía"}
                 </Label>
                 <div className="border border-border rounded-lg p-4">
                   <Calendar
@@ -105,7 +176,7 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
                 </div>
                 {dateRange?.from && dateRange?.to && (
                   <p className="text-sm text-muted-foreground mt-2 text-center">
-                    {nights} {nights === 1 ? "noche" : "noches"} seleccionadas
+                    {nights} {nights === 1 ? (t("booking.night") || "noche") : (t("booking.nights") || "noches")} {t("booking.selected") || "seleccionadas"}
                   </p>
                 )}
               </div>
@@ -113,7 +184,7 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
               <div>
                 <Label htmlFor="guests" className="flex items-center gap-2 mb-3">
                   <Users className="h-4 w-4" />
-                  Huéspedes
+                  {t("booking.guests") || "Huéspedes"}
                 </Label>
                 <Select value={guests} onValueChange={setGuests}>
                   <SelectTrigger id="guests">
@@ -122,7 +193,7 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
                   <SelectContent>
                     {Array.from({ length: accommodation.maxGuests }, (_, i) => i + 1).map((num) => (
                       <SelectItem key={num} value={num.toString()}>
-                        {num} {num === 1 ? "huésped" : "huéspedes"}
+                        {num} {num === 1 ? (t("booking.guest") || "huésped") : (t("booking.guests") || "huéspedes")}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -133,12 +204,12 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
                 <div className="bg-muted rounded-lg p-4 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
-                      USD {accommodation.pricePerNight} x {nights} noches
+                      USD {accommodation.pricePerNight} x {nights} {t("booking.nights") || "noches"}
                     </span>
                     <span className="text-foreground">USD {totalPrice}</span>
                   </div>
                   <div className="flex justify-between font-medium border-t border-border pt-2">
-                    <span className="text-foreground">Total</span>
+                    <span className="text-foreground">{t("booking.total") || "Total"}</span>
                     <span className="text-accent font-serif text-xl">USD {totalPrice}</span>
                   </div>
                 </div>
@@ -153,17 +224,17 @@ export function BookingModal({ open, onOpenChange, accommodation }: BookingModal
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Procesando...
+                    {t("booking.processing") || "Procesando..."}
                   </>
                 ) : user ? (
-                  "Confirmar Reserva"
+                  t("booking.confirm") || "Confirmar Reserva"
                 ) : (
-                  "Iniciar sesión para reservar"
+                  t("booking.login_to_book") || "Iniciar sesión para reservar"
                 )}
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">
-                Al reservar aceptás nuestros términos y condiciones. Cancelación gratuita hasta 48hs antes del check-in.
+                {t("booking.terms") || "Al reservar aceptás nuestros términos y condiciones. Cancelación gratuita hasta 48hs antes del check-in."}
               </p>
             </div>
           )}

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAuth } from "@/contexts/auth-context"
+import { useLanguage } from "@/contexts/language-context"
 import { Loader2 } from "lucide-react"
 
 interface AuthModalProps {
@@ -16,6 +17,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
+  const { t } = useLanguage()
   const [mode, setMode] = useState<"login" | "register">("login")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -33,15 +35,15 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       let success: boolean
       if (mode === "login") {
         success = await login(email, password)
-        if (!success) setError("Email o contraseña incorrectos")
+        if (!success) setError(t("auth.error.credentials") || "Email o contraseña incorrectos")
       } else {
         if (!name.trim()) {
-          setError("El nombre es requerido")
+          setError(t("auth.error.name_required") || "El nombre es requerido")
           setLoading(false)
           return
         }
         success = await register(name, email, password)
-        if (!success) setError("El email ya está registrado")
+        if (!success) setError(t("auth.error.email_taken") || "El email ya está registrado")
       }
 
       if (success) {
@@ -49,7 +51,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
         resetForm()
       }
     } catch {
-      setError("Ocurrió un error. Intentá de nuevo.")
+      setError(t("auth.error.generic") || "Ocurrió un error. Intentá de nuevo.")
     } finally {
       setLoading(false)
     }
@@ -72,27 +74,27 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-serif text-2xl text-center">
-            {mode === "login" ? "Iniciar Sesión" : "Crear Cuenta"}
+            {mode === "login" ? (t("auth.login") || "Iniciar Sesión") : (t("auth.register") || "Crear Cuenta")}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           {mode === "register" && (
             <div className="space-y-2">
-              <Label htmlFor="name">Nombre</Label>
+              <Label htmlFor="name">{t("auth.name") || "Nombre"}</Label>
               <Input
                 id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Tu nombre"
+                placeholder={t("auth.name_placeholder") || "Tu nombre"}
                 required
               />
             </div>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("auth.email") || "Email"}</Label>
             <Input
               id="email"
               type="email"
@@ -104,7 +106,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
+            <Label htmlFor="password">{t("auth.password") || "Contraseña"}</Label>
             <Input
               id="password"
               type="password"
@@ -124,13 +126,13 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
             disabled={loading}
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {mode === "login" ? "Ingresar" : "Registrarse"}
+            {mode === "login" ? (t("auth.login_submit") || "Ingresar") : (t("auth.register_submit") || "Registrarse")}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
-            {mode === "login" ? "¿No tenés cuenta?" : "¿Ya tenés cuenta?"}{" "}
+            {mode === "login" ? (t("auth.no_account") || "¿No tenés cuenta?") : (t("auth.has_account") || "¿Ya tenés cuenta?")}{" "}
             <button type="button" onClick={toggleMode} className="text-primary hover:underline font-medium">
-              {mode === "login" ? "Registrate" : "Ingresá"}
+              {mode === "login" ? (t("auth.register_link") || "Registrate") : (t("auth.login_link") || "Ingresá")}
             </button>
           </p>
         </form>

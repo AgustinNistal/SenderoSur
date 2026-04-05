@@ -7,24 +7,28 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MapPin, Star, Users, Search } from "lucide-react"
 import type { Accommodation } from "@/lib/data"
+import { useLanguage } from "@/contexts/language-context"
 
 interface AccommodationsGridProps {
   accommodations: Accommodation[]
 }
 
 export function AccommodationsGrid({ accommodations }: AccommodationsGridProps) {
+  const { t, translateAccommodation, translateCity } = useLanguage()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedType, setSelectedType] = useState<string | null>(null)
 
   const types = [...new Set(accommodations.map((a) => a.type))]
 
-  const filtered = accommodations.filter((acc) => {
-    const matchesSearch =
-      acc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      acc.city.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesType = !selectedType || acc.type === selectedType
-    return matchesSearch && matchesType
-  })
+  const filtered = accommodations
+    .filter((acc) => {
+      const matchesSearch =
+        acc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        acc.city.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesType = !selectedType || acc.type === selectedType
+      return matchesSearch && matchesType
+    })
+    .map(translateAccommodation)
 
   return (
     <section className="py-12 bg-background">
@@ -34,7 +38,7 @@ export function AccommodationsGrid({ accommodations }: AccommodationsGridProps) 
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nombre o ciudad..."
+              placeholder={t("accommodations.search") || "Buscar por nombre o ciudad..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -46,7 +50,7 @@ export function AccommodationsGrid({ accommodations }: AccommodationsGridProps) 
               size="sm"
               onClick={() => setSelectedType(null)}
             >
-              Todos
+              {t("accommodations.all") || "Todos"}
             </Button>
             {types.map((type) => (
               <Button
@@ -105,7 +109,7 @@ export function AccommodationsGrid({ accommodations }: AccommodationsGridProps) 
                     </div>
                     <div className="text-right">
                       <p className="text-accent font-serif text-lg">USD {accommodation.pricePerNight}</p>
-                      <p className="text-muted-foreground text-xs">por noche</p>
+                      <p className="text-muted-foreground text-xs">{t("accommodations.per_night") || "por noche"}</p>
                     </div>
                   </div>
                 </div>
@@ -116,7 +120,7 @@ export function AccommodationsGrid({ accommodations }: AccommodationsGridProps) 
 
         {filtered.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">No se encontraron hospedajes con esos criterios.</p>
+            <p className="text-muted-foreground">{t("accommodations.not_found") || "No se encontraron hospedajes con esos criterios."}</p>
           </div>
         )}
       </div>

@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Check, Package, Users, Calendar } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
+import { PackBookingModal } from "@/components/routes/pack-booking-modal"
 import type { Route } from "@/lib/data"
+import { useLanguage } from "@/contexts/language-context"
 
 interface RoutePackOfferProps {
   route: Route
@@ -13,15 +15,18 @@ interface RoutePackOfferProps {
 
 export function RoutePackOffer({ route }: RoutePackOfferProps) {
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [packModalOpen, setPackModalOpen] = useState(false)
   const { user } = useAuth()
+  const { t, translateRoute } = useLanguage()
+  
+  const translatedRoute = translateRoute(route)
 
   const handleBookPack = () => {
     if (!user) {
       setAuthModalOpen(true)
       return
     }
-    // TODO: Implement pack booking
-    alert("Reserva de pack - próximamente!")
+    setPackModalOpen(true)
   }
 
   return (
@@ -32,18 +37,18 @@ export function RoutePackOffer({ route }: RoutePackOfferProps) {
             <div className="p-8 md:p-10">
               <div className="flex items-center gap-2 text-accent mb-4">
                 <Package className="h-6 w-6" />
-                <span className="font-medium">Pack Completo</span>
+                <span className="font-medium">{t("booking.pack.title")}</span>
               </div>
 
-              <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-4">Reservá toda la ruta</h2>
+              <h2 className="font-serif text-2xl md:text-3xl text-foreground mb-4">{t("booking.pack.title")}</h2>
 
               <p className="text-muted-foreground mb-6">
                 Obtené un precio especial reservando todas las noches de hospedaje de esta ruta. Incluye{" "}
-                {route.stops.length} noches en domos ecológicos exclusivos.
+                {translatedRoute.stops.length} noches en domos ecológicos exclusivos. {/* Can translate this later if desired */}
               </p>
 
               <ul className="space-y-3 mb-8">
-                {route.highlights.map((highlight) => (
+                {translatedRoute.highlights.map((highlight) => (
                   <li key={highlight} className="flex items-center gap-3 text-foreground">
                     <Check className="h-5 w-5 text-primary flex-shrink-0" />
                     <span>{highlight}</span>
@@ -62,7 +67,7 @@ export function RoutePackOffer({ route }: RoutePackOfferProps) {
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  <span>{route.duration}</span>
+                  <span>{translatedRoute.duration}</span>
                 </div>
               </div>
             </div>
@@ -70,9 +75,9 @@ export function RoutePackOffer({ route }: RoutePackOfferProps) {
             <div className="bg-primary/5 p-8 md:p-10 flex flex-col justify-center">
               <div className="text-center">
                 <span className="text-muted-foreground text-sm">Precio total del pack</span>
-                <p className="font-serif text-5xl text-accent my-2">USD {route.packPrice}</p>
+                <p className="font-serif text-5xl text-accent my-2">USD {translatedRoute.packPrice}</p>
                 <p className="text-muted-foreground text-sm mb-6">
-                  por persona · {route.stops.length} noches incluidas
+                  por persona · {translatedRoute.stops.length} noches incluidas
                 </p>
 
                 <Button
@@ -80,7 +85,7 @@ export function RoutePackOffer({ route }: RoutePackOfferProps) {
                   onClick={handleBookPack}
                   className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
                 >
-                  Reservar Pack Completo
+                  {t("booking.pack.title")}
                 </Button>
 
                 <p className="text-xs text-muted-foreground mt-4">
@@ -93,6 +98,7 @@ export function RoutePackOffer({ route }: RoutePackOfferProps) {
       </div>
 
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
+      <PackBookingModal open={packModalOpen} onOpenChange={setPackModalOpen} route={translatedRoute} />
     </section>
   )
 }

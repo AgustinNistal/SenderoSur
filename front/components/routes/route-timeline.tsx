@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MapPin, Clock, Car, Plane, Home, ArrowRight } from "lucide-react"
 import type { Route, RouteStop, City, Accommodation } from "@/lib/data"
+import { useLanguage } from "@/contexts/language-context"
 
 interface StopWithDetails extends RouteStop {
   cityDetails?: City
@@ -18,6 +19,7 @@ interface RouteTimelineProps {
 }
 
 export function RouteTimeline({ route, stops }: RouteTimelineProps) {
+  const { translateCity, translateAccommodation } = useLanguage()
   const [visibleStops, setVisibleStops] = useState<Set<number>>(new Set())
   const stopRefs = useRef<(HTMLDivElement | null)[]>([])
 
@@ -53,7 +55,11 @@ export function RouteTimeline({ route, stops }: RouteTimelineProps) {
           {/* Timeline line */}
           <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-border md:-translate-x-0.5" />
 
-          {stops.map((stop, index) => {
+          {stops.map((stopItem, index) => {
+            const stop = { ...stopItem }
+            if (stop.cityDetails) stop.cityDetails = translateCity(stop.cityDetails)
+            if (stop.accommodationDetails) stop.accommodationDetails = translateAccommodation(stop.accommodationDetails)
+            
             const isFirst = index === 0
             const isLast = index === stops.length - 1
             const isLeft = index % 2 === 0
@@ -80,7 +86,7 @@ export function RouteTimeline({ route, stops }: RouteTimelineProps) {
                         <div className="relative h-40">
                           <Image
                             src={stop.accommodationDetails.images[0] || "/placeholder.svg?height=200&width=400"}
-                            alt={stop.city}
+                            alt={stop.cityDetails?.name || stop.city}
                             fill
                             className="object-cover"
                           />
@@ -99,7 +105,7 @@ export function RouteTimeline({ route, stops }: RouteTimelineProps) {
                           <span>{stop.province}</span>
                         </div>
 
-                        <h3 className="font-serif text-xl text-foreground mb-2">{stop.city}</h3>
+                        <h3 className="font-serif text-xl text-foreground mb-2">{stop.cityDetails?.name || stop.city}</h3>
 
                         {stop.cityDetails && (
                           <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
@@ -128,7 +134,7 @@ export function RouteTimeline({ route, stops }: RouteTimelineProps) {
                             </div>
                             <div className="flex items-center justify-between">
                               <span className="text-accent font-serif text-lg">
-                                USD {stop.accommodationDetails.pricePerNight}/noche
+                                USD {stop.accommodationDetails.pricePerNight}
                               </span>
                               <Link href={`/hospedajes/${stop.accommodationDetails.id}`}>
                                 <Button size="sm" variant="outline" className="gap-1 bg-transparent">

@@ -7,6 +7,7 @@ import { MapPin, Star, Users, Wifi, Car, Coffee, Waves, Mountain, Telescope, Che
 import { BookingModal } from "@/components/accommodations/booking-modal"
 import { ReviewsSection } from "@/components/accommodations/reviews-section"
 import type { Accommodation, City } from "@/lib/data"
+import { useLanguage } from "@/contexts/language-context"
 
 interface AccommodationDetailProps {
   accommodation: Accommodation
@@ -25,6 +26,10 @@ const amenityIcons: Record<string, typeof Wifi> = {
 }
 
 export function AccommodationDetail({ accommodation, city }: AccommodationDetailProps) {
+  const { t, translateAccommodation, translateCity } = useLanguage()
+  const translatedAccommodation = translateAccommodation(accommodation)
+  const translatedCity = city ? translateCity(city) : undefined
+
   const [bookingOpen, setBookingOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState(0)
 
@@ -91,40 +96,40 @@ export function AccommodationDetail({ accommodation, city }: AccommodationDetail
             <div>
               <div className="flex items-center gap-2 text-muted-foreground mb-2">
                 <MapPin className="h-4 w-4" />
-                <span>{accommodation.city}</span>
+                <span>{translatedAccommodation.city}</span>
                 <span className="text-border">•</span>
-                <span className="capitalize">{accommodation.type}</span>
+                <span className="capitalize">{t(`accommodation.type.${translatedAccommodation.type}`) || translatedAccommodation.type}</span>
               </div>
 
-              <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">{accommodation.name}</h1>
+              <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-4">{translatedAccommodation.name}</h1>
 
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
                   <Star className="h-5 w-5 fill-accent text-accent" />
-                  <span className="font-medium text-lg">{accommodation.rating}</span>
-                  <span className="text-muted-foreground">({accommodation.reviewCount} reseñas)</span>
+                  <span className="font-medium text-lg">{translatedAccommodation.rating}</span>
+                  <span className="text-muted-foreground">({translatedAccommodation.reviewCount} {t("accommodations.reviews") || "reseñas"})</span>
                 </div>
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <Users className="h-5 w-5" />
-                  <span>Hasta {accommodation.maxGuests} huéspedes</span>
+                  <span>{t("accommodations.up_to") || "Hasta"} {translatedAccommodation.maxGuests} {t("accommodations.guests") || "huéspedes"}</span>
                 </div>
               </div>
             </div>
 
             <div className="border-t border-border pt-8">
-              <h2 className="font-serif text-2xl text-foreground mb-4">Sobre este domo</h2>
-              <p className="text-muted-foreground leading-relaxed">{accommodation.description}</p>
-              {city && (
+              <h2 className="font-serif text-2xl text-foreground mb-4">{t("accommodations.about") || "Sobre este domo"}</h2>
+              <p className="text-muted-foreground leading-relaxed">{translatedAccommodation.description}</p>
+              {translatedCity && (
                 <p className="text-muted-foreground leading-relaxed mt-4">
-                  Ubicado en {city.name}, {city.province}. {city.description}
+                  {t("accommodations.located_in") || "Ubicado en"} {translatedCity.name}, {translatedCity.province}. {translatedCity.description}
                 </p>
               )}
             </div>
 
             <div className="border-t border-border pt-8">
-              <h2 className="font-serif text-2xl text-foreground mb-6">Amenidades</h2>
+              <h2 className="font-serif text-2xl text-foreground mb-6">{t("accommodations.amenities") || "Amenidades"}</h2>
               <div className="grid sm:grid-cols-2 gap-4">
-                {accommodation.amenities.map((amenity) => {
+                {translatedAccommodation.amenities.map((amenity) => {
                   const Icon = amenityIcons[amenity] || Check
                   return (
                     <div key={amenity} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
@@ -136,11 +141,11 @@ export function AccommodationDetail({ accommodation, city }: AccommodationDetail
               </div>
             </div>
 
-            {city && (
+            {translatedCity && (
               <div className="border-t border-border pt-8">
-                <h2 className="font-serif text-2xl text-foreground mb-6">Qué hacer en {city.name}</h2>
+                <h2 className="font-serif text-2xl text-foreground mb-6">{t("accommodations.todo") || "Qué hacer en"} {translatedCity.name}</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  {city.activities.map((activity) => (
+                  {translatedCity.activities.map((activity) => (
                     <div key={activity} className="flex items-center gap-3 text-muted-foreground">
                       <Check className="h-4 w-4 text-accent" />
                       <span>{activity}</span>
@@ -157,8 +162,8 @@ export function AccommodationDetail({ accommodation, city }: AccommodationDetail
           <div className="lg:col-span-1">
             <div className="sticky top-24 bg-card rounded-xl shadow-lg border border-border p-6">
               <div className="flex items-baseline gap-2 mb-6">
-                <span className="font-serif text-3xl text-accent">USD {accommodation.pricePerNight}</span>
-                <span className="text-muted-foreground">/ noche</span>
+                <span className="font-serif text-3xl text-accent">USD {translatedAccommodation.pricePerNight}</span>
+                <span className="text-muted-foreground">/ {t("accommodations.night") || "noche"}</span>
               </div>
 
               <Button
@@ -166,10 +171,10 @@ export function AccommodationDetail({ accommodation, city }: AccommodationDetail
                 onClick={() => setBookingOpen(true)}
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mb-4"
               >
-                Reservar ahora
+                {t("accommodations.book_now") || "Reservar ahora"}
               </Button>
 
-              <p className="text-center text-sm text-muted-foreground">Cancelación gratuita hasta 48hs antes</p>
+              <p className="text-center text-sm text-muted-foreground">{t("accommodations.free_cancellation") || "Cancelación gratuita hasta 48hs antes"}</p>
 
               <div className="border-t border-border mt-6 pt-6 space-y-3">
                 <div className="flex justify-between text-sm">
@@ -181,8 +186,8 @@ export function AccommodationDetail({ accommodation, city }: AccommodationDetail
                   <span className="text-foreground">11:00</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Capacidad máxima</span>
-                  <span className="text-foreground">{accommodation.maxGuests} personas</span>
+                  <span className="text-muted-foreground">{t("accommodations.max_capacity") || "Capacidad máxima"}</span>
+                  <span className="text-foreground">{translatedAccommodation.maxGuests} {t("accommodations.people") || "personas"}</span>
                 </div>
               </div>
             </div>
@@ -190,7 +195,7 @@ export function AccommodationDetail({ accommodation, city }: AccommodationDetail
         </div>
       </section>
 
-      <BookingModal open={bookingOpen} onOpenChange={setBookingOpen} accommodation={accommodation} />
+      <BookingModal open={bookingOpen} onOpenChange={setBookingOpen} accommodation={translatedAccommodation} />
     </div>
   )
 }

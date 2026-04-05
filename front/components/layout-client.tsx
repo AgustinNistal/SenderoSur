@@ -17,18 +17,23 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/auth-context"
 import { AuthModal } from "@/components/auth-modal"
+import { LanguageSwitcher } from "@/components/language-switcher"
+import { useLanguage } from "@/contexts/language-context"
 
-const navLinks = [
-  { href: "/", label: "Inicio" },
-  { href: "/rutas", label: "Rutas" },
-  { href: "/hospedajes", label: "Hospedajes" },
-]
+// We remove the static navLinks and create them dynamically inside the component
 
 export function LayoutClient({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const pathname = usePathname()
   const { user, logout } = useAuth()
+  const { t } = useLanguage()
+
+  const navLinks = [
+    { href: "/", label: t("nav.home") },
+    { href: "/rutas", label: t("nav.routes") },
+    { href: "/hospedajes", label: t("nav.accommodations") },
+  ]
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -66,19 +71,19 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
                     <DropdownMenuItem asChild>
                       <Link href="/perfil" className="flex items-center gap-2">
                         <User className="h-4 w-4" />
-                        Mi Perfil
+                        {t("nav.profile")}
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/perfil#reservas" className="flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
-                        Mis Reservas
+                        {t("nav.reservations")}
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout} className="flex items-center gap-2 text-destructive">
                       <LogOut className="h-4 w-4" />
-                      Cerrar Sesión
+                      {t("nav.logout")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -88,9 +93,11 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
                   size="sm"
                   className="bg-primary text-primary-foreground hover:bg-primary/90"
                 >
-                  Ingresar
+                  {t("nav.login")}
                 </Button>
               )}
+
+              <LanguageSwitcher />
 
               <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
                 <SheetTrigger asChild className="md:hidden">
@@ -129,11 +136,11 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
             <div>
               <h3 className="font-[family-name:var(--font-barrio)] text-2xl text-primary mb-4">Sendero Sur</h3>
               <p className="text-background/70 text-sm">
-                Descubrí las mejores rutas turísticas de Argentina con alojamiento en domos ecológicos.
+                {t("footer.slogan")}
               </p>
             </div>
             <div>
-              <h4 className="font-serif text-lg mb-4">Rutas</h4>
+              <h4 className="font-serif text-lg mb-4">{t("footer.routes.title")}</h4>
               <ul className="space-y-2 text-sm text-background/70">
                 <li>
                   <Link href="/rutas/costera-atlantica" className="hover:text-primary transition-colors">
@@ -163,7 +170,7 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
               </ul>
             </div>
             <div>
-              <h4 className="font-serif text-lg mb-4">Contacto</h4>
+              <h4 className="font-serif text-lg mb-4">{t("footer.contact.title")}</h4>
               <ul className="space-y-2 text-sm text-background/70">
                 <li>info@senderosur.com</li>
                 <li>+54 11 1234-5678</li>
@@ -171,7 +178,7 @@ export function LayoutClient({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <div className="border-t border-background/20 mt-8 pt-8 text-center text-sm text-background/50">
-            © {new Date().getFullYear()} Sendero Sur. Todos los derechos reservados.
+            © {new Date().getFullYear()} Sendero Sur. {t("footer.rights")}
           </div>
         </div>
       </footer>

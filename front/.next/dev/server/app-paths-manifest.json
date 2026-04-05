@@ -1,5 +1,4 @@
 {
-  "/hospedajes/[accommodationId]/page": "app/hospedajes/[accommodationId]/page.js",
   "/page": "app/page.js",
   "/rutas/[routeId]/page": "app/rutas/[routeId]/page.js",
   "/rutas/page": "app/rutas/page.js"

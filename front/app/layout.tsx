@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { LayoutClient } from "@/components/layout-client"
 import { AuthProvider } from "@/contexts/auth-context"
+import { LanguageProvider } from "@/contexts/language-context"
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -46,7 +47,9 @@ export default function RootLayout({
     <html lang="es">
       <body className={`${lexend.variable} ${shrikhand.variable} ${barrio.variable} font-sans antialiased`}>
         <AuthProvider>
-          <LayoutClient>{children}</LayoutClient>
+          <LanguageProvider>
+            <LayoutClient>{children}</LayoutClient>
+          </LanguageProvider>
         </AuthProvider>
         <Analytics />
       </body>

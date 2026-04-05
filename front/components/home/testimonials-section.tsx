@@ -20,7 +20,7 @@ const testimonials = [
     location: "Rosario",
     route: "Ruta Litoral",
     rating: 5,
-    text: "Las Cataratass del Iguazú y los Esteros del Iberá en un solo viaje. Sendero Sur lo hizo posible.",
+    text: "Las Cataratas del Iguazú y los Esteros del Iberá en un solo viaje. Sendero Sur lo hizo posible.",
   },
 ]
 

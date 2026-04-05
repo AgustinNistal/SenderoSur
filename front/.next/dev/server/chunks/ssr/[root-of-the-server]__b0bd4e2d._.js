@@ -1670,13 +1670,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$accommodations
 ;
 ;
 async function generateStaticParams() {
-    return __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$data$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["accommodations"].map((acc)=>({
-            accommodationId: acc.id
-        }));
+    return [];
 }
 async function generateMetadata({ params }) {
     const { accommodationId } = await params;
-    const accommodation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$data$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getAccommodation"])(accommodationId);
+    const accommodation = await fetchAccommodation(accommodationId);
     if (!accommodation) return {
         title: "Hospedaje no encontrado"
     };
@@ -1685,9 +1683,18 @@ async function generateMetadata({ params }) {
         description: accommodation.description
     };
 }
+async function fetchAccommodation(id) {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002";
+    const res = await fetch(`${apiUrl}/accommodations/${id}`, {
+        cache: "no-store"
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+}
 async function AccommodationPage({ params }) {
     const { accommodationId } = await params;
-    const accommodation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$data$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getAccommodation"])(accommodationId);
+    const accommodation = await fetchAccommodation(accommodationId);
     if (!accommodation) {
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$components$2f$navigation$2e$react$2d$server$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["notFound"])();
     }
@@ -1697,7 +1704,7 @@ async function AccommodationPage({ params }) {
         city: city
     }, void 0, false, {
         fileName: "[project]/app/hospedajes/[accommodationId]/page.tsx",
-        lineNumber: 37,
+        lineNumber: 43,
         columnNumber: 10
     }, this);
 }

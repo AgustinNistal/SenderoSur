@@ -320,7 +320,7 @@ function Calendar({ className, classNames, showOutsideDays = true, captionLayout
             range_start: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('rounded-l-md bg-accent', defaultClassNames.range_start),
             range_middle: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('rounded-none', defaultClassNames.range_middle),
             range_end: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('rounded-r-md bg-accent', defaultClassNames.range_end),
-            today: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none', defaultClassNames.today),
+            today: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('text-orange-500 font-bold rounded-md data-[selected=true]:rounded-none', defaultClassNames.today),
             outside: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('text-muted-foreground aria-selected:text-muted-foreground', defaultClassNames.outside),
             disabled: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('text-muted-foreground opacity-50', defaultClassNames.disabled),
             hidden: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])('invisible', defaultClassNames.hidden),
@@ -455,9 +455,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/users.js [app-client] (ecmascript) <export default as Users>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/loader-circle.js [app-client] (ecmascript) <export default as Loader2>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/check.js [app-client] (ecmascript) <export default as Check>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$api$2d$helper$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/api-helper.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/date-fns/format.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$startOfDay$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/date-fns/startOfDay.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
+;
 ;
 ;
 ;
@@ -474,7 +479,47 @@ function BookingModal({ open, onOpenChange, accommodation }) {
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [success, setSuccess] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [authModalOpen, setAuthModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [unavailableDates, setUnavailableDates] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const { user, addReservation } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$contexts$2f$auth$2d$context$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"])();
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "BookingModal.useEffect": ()=>{
+            async function fetchAvailability() {
+                if (!open) return;
+                try {
+                    // Fetch approx 6 months of availability
+                    const from = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(new Date(), "yyyy-MM-dd");
+                    const toDate = new Date();
+                    toDate.setMonth(toDate.getMonth() + 6);
+                    const to = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(toDate, "yyyy-MM-dd");
+                    const availability = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$api$2d$helper$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])(`/accommodations/${accommodation.id}/availability?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+                    if (availability.conflicts && availability.conflicts.length > 0) {
+                        const dates = [];
+                        for (const conflict of availability.conflicts){
+                            // Include dates from checkIn out to the day BEFORE checkOut (since checkOut day is technically free to checkIn)
+                            const start = new Date(conflict.checkIn + "T00:00:00") // Force local timezone interpretation without shift
+                            ;
+                            const end = new Date(conflict.checkOut + "T00:00:00");
+                            let current = start;
+                            while(current < end){
+                                dates.push(new Date(current));
+                                current.setDate(current.getDate() + 1);
+                            }
+                        }
+                        setUnavailableDates(dates);
+                    } else {
+                        setUnavailableDates([]);
+                    }
+                } catch (e) {
+                    console.error("Failed to load availability", e);
+                }
+            }
+            fetchAvailability();
+        }
+    }["BookingModal.useEffect"], [
+        open,
+        accommodation.id
+    ]);
     const nights = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMemo"])({
         "BookingModal.useMemo[nights]": ()=>{
             if (!dateRange?.from || !dateRange?.to) return 0;
@@ -492,17 +537,31 @@ function BookingModal({ open, onOpenChange, accommodation }) {
         }
         if (!dateRange?.from || !dateRange?.to) return;
         setLoading(true);
-        await new Promise((resolve)=>setTimeout(resolve, 1500));
-        addReservation({
-            accommodationId: accommodation.id,
-            accommodationName: accommodation.name,
-            cityName: accommodation.city,
-            checkIn: dateRange.from,
-            checkOut: dateRange.to,
-            guests: Number.parseInt(guests),
-            totalPrice,
-            status: "confirmed"
-        });
+        setError(null);
+        try {
+            const fromISO = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(dateRange.from, "yyyy-MM-dd");
+            const toISO = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$format$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["format"])(dateRange.to, "yyyy-MM-dd");
+            const availability = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$api$2d$helper$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiRequest"])(`/accommodations/${accommodation.id}/availability?from=${encodeURIComponent(fromISO)}&to=${encodeURIComponent(toISO)}`);
+            if (!availability.available) {
+                setError("Ese hospedaje no está disponible en las fechas seleccionadas.");
+                setLoading(false);
+                return;
+            }
+            await addReservation({
+                accommodationId: accommodation.id,
+                accommodationName: accommodation.name,
+                cityName: accommodation.city,
+                checkIn: dateRange.from,
+                checkOut: dateRange.to,
+                guests: Number.parseInt(guests),
+                totalPrice,
+                status: "confirmed"
+            });
+        } catch  {
+            setError("No pudimos procesar la reserva. Probá de nuevo en unos segundos.");
+            setLoading(false);
+            return;
+        }
         setLoading(false);
         setSuccess(true);
         setTimeout(()=>{
@@ -511,9 +570,12 @@ function BookingModal({ open, onOpenChange, accommodation }) {
             setDateRange(undefined);
         }, 2000);
     };
-    const disabledDays = {
-        before: new Date()
-    };
+    const disabledDays = [
+        {
+            before: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$date$2d$fns$2f$startOfDay$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["startOfDay"])(new Date())
+        },
+        ...unavailableDates
+    ];
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Dialog"], {
@@ -531,12 +593,12 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                lineNumber: 76,
+                                lineNumber: 140,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                            lineNumber: 75,
+                            lineNumber: 139,
                             columnNumber: 11
                         }, this),
                         success ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -548,12 +610,12 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                         className: "h-8 w-8 text-primary"
                                     }, void 0, false, {
                                         fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                        lineNumber: 82,
+                                        lineNumber: 146,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 81,
+                                    lineNumber: 145,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -561,7 +623,7 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                     children: "Reserva Confirmada"
                                 }, void 0, false, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 84,
+                                    lineNumber: 148,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -569,17 +631,25 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                     children: "Tu reserva ha sido procesada exitosamente. Podés verla en tu perfil."
                                 }, void 0, false, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 85,
+                                    lineNumber: 149,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                            lineNumber: 80,
+                            lineNumber: 144,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "space-y-6 mt-4",
                             children: [
+                                error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive",
+                                    children: error
+                                }, void 0, false, {
+                                    fileName: "[project]/components/accommodations/booking-modal.tsx",
+                                    lineNumber: 156,
+                                    columnNumber: 17
+                                }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
@@ -589,14 +659,14 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                     className: "h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 93,
+                                                    lineNumber: 162,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Fechas de estadía"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                            lineNumber: 92,
+                                            lineNumber: 161,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -610,12 +680,12 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                 className: "mx-auto"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                lineNumber: 97,
+                                                lineNumber: 166,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                            lineNumber: 96,
+                                            lineNumber: 165,
                                             columnNumber: 17
                                         }, this),
                                         dateRange?.from && dateRange?.to && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -628,13 +698,13 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                            lineNumber: 107,
+                                            lineNumber: 176,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 91,
+                                    lineNumber: 160,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -647,14 +717,14 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                     className: "h-4 w-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 115,
+                                                    lineNumber: 184,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Huéspedes"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                            lineNumber: 114,
+                                            lineNumber: 183,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -665,12 +735,12 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                     id: "guests",
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                         fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                        lineNumber: 120,
+                                                        lineNumber: 189,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 119,
+                                                    lineNumber: 188,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -685,24 +755,24 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                             ]
                                                         }, num, true, {
                                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                            lineNumber: 124,
+                                                            lineNumber: 193,
                                                             columnNumber: 23
                                                         }, this))
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 122,
+                                                    lineNumber: 191,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                            lineNumber: 118,
+                                            lineNumber: 187,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 113,
+                                    lineNumber: 182,
                                     columnNumber: 15
                                 }, this),
                                 nights > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -722,7 +792,7 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 135,
+                                                    lineNumber: 204,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -733,13 +803,13 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 138,
+                                                    lineNumber: 207,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                            lineNumber: 134,
+                                            lineNumber: 203,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -750,7 +820,7 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                     children: "Total"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 141,
+                                                    lineNumber: 210,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -761,19 +831,19 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                    lineNumber: 142,
+                                                    lineNumber: 211,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                            lineNumber: 140,
+                                            lineNumber: 209,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 202,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -787,7 +857,7 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                                 className: "mr-2 h-4 w-4 animate-spin"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                                lineNumber: 155,
+                                                lineNumber: 224,
                                                 columnNumber: 21
                                             }, this),
                                             "Procesando..."
@@ -795,7 +865,7 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                     }, void 0, true) : user ? "Confirmar Reserva" : "Iniciar sesión para reservar"
                                 }, void 0, false, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 147,
+                                    lineNumber: 216,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -803,24 +873,24 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                                     children: "Al reservar aceptás nuestros términos y condiciones. Cancelación gratuita hasta 48hs antes del check-in."
                                 }, void 0, false, {
                                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                                    lineNumber: 165,
+                                    lineNumber: 234,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/accommodations/booking-modal.tsx",
-                            lineNumber: 90,
+                            lineNumber: 154,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/accommodations/booking-modal.tsx",
-                    lineNumber: 74,
+                    lineNumber: 138,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/accommodations/booking-modal.tsx",
-                lineNumber: 73,
+                lineNumber: 137,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$auth$2d$modal$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["AuthModal"], {
@@ -828,13 +898,13 @@ function BookingModal({ open, onOpenChange, accommodation }) {
                 onOpenChange: setAuthModalOpen
             }, void 0, false, {
                 fileName: "[project]/components/accommodations/booking-modal.tsx",
-                lineNumber: 173,
+                lineNumber: 242,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true);
 }
-_s(BookingModal, "alI8Z4OPuxXAJ60cUuQFuud0LUA=", false, function() {
+_s(BookingModal, "YrA8ZycpY7GhKOFR8FCsHOMdBO8=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$contexts$2f$auth$2d$context$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuth"]
     ];
